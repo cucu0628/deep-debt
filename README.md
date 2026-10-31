@@ -22,3 +22,8 @@ Ad settings live in `.env.web` / `.env.crazygames`. All ads are optional rewarde
 blocked (ad blocker, school filter) the game simply runs without them.
 
 Pushing to `main` deploys the web build to GitHub Pages (`.github/workflows/deploy.yml`).
+
+## License
+
+Copyright (c) 2026 cucu0628. **All rights reserved.** The source is public for hosting and reference only;
+you may not copy, modify, re-host or redistribute the game without permission. See [LICENSE](LICENSE).
