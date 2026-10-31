@@ -16,7 +16,8 @@ npm test         # game logic + balance simulations
 | Command | Output | Ads |
 |---|---|---|
 | `npm run build:web` | `dist/web` | Google AdSense H5 Games Ads (GitHub Pages) |
-| `npm run build:crazygames` | `dist/crazygames` | CrazyGames SDK |
+| `npm run build:crazygames` | `dist/crazygames` | CrazyGames SDK, ads off (Basic Launch) |
+| `npm run build:crazygames:full` | `dist/crazygames-full` | CrazyGames SDK with rewarded ads (Full Launch) |
 
 Ad settings live in `.env.web` / `.env.crazygames`. All ads are optional rewarded ads; if an ad network is
 blocked (ad blocker, school filter) the game simply runs without them.
