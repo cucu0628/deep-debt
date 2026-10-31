@@ -28,6 +28,7 @@ const TEST = import.meta.env.VITE_ADSENSE_TEST === 'on';
 
 export const adsenseProvider: AdProvider = {
   id: 'adsense',
+  adsEnabled: true,
   async init() {
     if (!/^ca-pub-\d{10,}$/.test(CLIENT)) return false;
     window.adsbygoogle = window.adsbygoogle || [];

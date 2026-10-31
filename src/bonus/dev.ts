@@ -3,6 +3,7 @@ import type { AdProvider, AdOutcome } from './types';
 /** Fake rewarded ad for local development: a 3 second countdown you can skip. */
 export const mockProvider: AdProvider = {
   id: 'mock',
+  adsEnabled: true,
   init: async () => true,
   rewarded: (placement) =>
     new Promise<AdOutcome>((resolve) => {

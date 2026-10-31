@@ -20,8 +20,11 @@ export function RewardButton({ placement, label, onReward, className }: { placem
       disabled={busy}
       onClick={async () => {
         sfx.click();
-        if (await watchAd(placement)) onReward();
-        else toast('No reward this time. Watch the whole ad to get it.', 'info');
+        const out = await watchAd(placement);
+        if (out === 'watched') onReward();
+        else if (out === 'skipped') toast('Watch the whole ad to get the reward.', 'info');
+        else if (out === 'disabled') toast("Ads aren't available here.", 'info');
+        else toast('No ad available right now. Try again later!', 'info');
       }}
     >
       📺 {label}

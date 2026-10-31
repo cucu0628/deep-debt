@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { pauseAudio } from '../fx/audio';
-import type { AdProvider } from './types';
+import type { AdOutcome, AdProvider } from './types';
 
 /**
  * Which ad network this build talks to, set per build in the .env.<mode> files:
@@ -35,7 +35,7 @@ export async function initAds() {
     if (p && (await p.init())) {
       provider = p;
       p.gameplay?.(playing);
-      useAds.setState({ ready: true });
+      useAds.setState({ ready: p.adsEnabled });
     }
   } catch {
     provider = null;
@@ -49,17 +49,24 @@ export function setGameplay(p: boolean) {
   provider?.gameplay?.(p);
 }
 
-/** Shows a rewarded ad. Resolves true only if the player watched it to the end. */
-export async function watchAd(placement: string): Promise<boolean> {
-  if (!provider || useAds.getState().busy) return false;
+/** Shows a rewarded ad. Only grant the reward when it resolves to 'watched'. */
+export async function watchAd(placement: string): Promise<AdOutcome> {
+  if (!provider || !provider.adsEnabled || useAds.getState().busy) return 'unavailable';
   useAds.setState({ busy: true });
   pauseAudio(true);
+  let out: AdOutcome = 'unavailable';
   try {
-    return (await provider.rewarded(placement)) === 'watched';
+    out = await provider.rewarded(placement);
   } catch {
-    return false;
+    out = 'unavailable';
   } finally {
     pauseAudio(false);
     useAds.setState({ busy: false });
   }
+  // The platform has ads switched off: never show buttons that can't do anything.
+  if (out === 'disabled') {
+    provider.adsEnabled = false;
+    useAds.setState({ ready: false });
+  }
+  return out;
 }

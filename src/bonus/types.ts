@@ -1,7 +1,10 @@
-export type AdOutcome = 'watched' | 'skipped' | 'unavailable';
+/** `disabled`: the platform has ads switched off (e.g. CrazyGames Basic Launch). */
+export type AdOutcome = 'watched' | 'skipped' | 'unavailable' | 'disabled';
 
 export interface AdProvider {
   id: string;
+  /** Whether rewarded ads may be offered at all. Set during init. */
+  adsEnabled: boolean;
   /** Loads the SDK. Resolves false when ads can't run here (blocked network, missing config, ...). */
   init(): Promise<boolean>;
   /** Shows a rewarded ad. Only grant the reward on 'watched'. */

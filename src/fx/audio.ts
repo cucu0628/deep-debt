@@ -10,16 +10,24 @@ export function setMuted(m: boolean) {
 }
 
 let adPaused = false;
+/** Muted by the hosting platform (CrazyGames' mute button). */
+let platformMuted = false;
+
+export function setPlatformMute(m: boolean) {
+  platformMuted = m;
+  if (!ctx) return;
+  (m ? ctx.suspend() : ctx.resume()).catch(() => {});
+}
 
 /** Silences the game while an ad plays. */
 export function pauseAudio(p: boolean) {
   adPaused = p;
-  if (!ctx) return;
+  if (!ctx || platformMuted) return;
   (p ? ctx.suspend() : ctx.resume()).catch(() => {});
 }
 
 function ac(): AudioContext | null {
-  if (muted || adPaused) return null;
+  if (muted || adPaused || platformMuted) return null;
   if (!ctx) {
     try {
       ctx = new AudioContext();
