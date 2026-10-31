@@ -1584,11 +1584,122 @@ main {
   color: var(--gold);
 }
 
+/* ---------- fit the game frame ----------
+   Town and mine fill the viewport exactly (CrazyGames iframe, small laptops) so nothing
+   important ends up below the fold. Other screens scroll as usual. */
+.app.phase-town,
+.app.phase-mine {
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+}
+.phase-town main,
+.phase-mine main {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.town {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+.town-wrap {
+  flex: 1;
+  min-height: 0;
+  align-items: center;
+  overflow: hidden;
+}
+.mine-view {
+  flex: 1;
+  min-height: 0;
+  grid-template-rows: minmax(0, 1fr);
+}
+.mine-side {
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.mine-side > .btn.big {
+  position: sticky;
+  bottom: 4px;
+  z-index: 1;
+}
+@media (max-height: 760px) {
+  .mine-side .px-panel {
+    padding: 8px 10px;
+  }
+  .mine-side .layer-title {
+    margin: -8px -10px 8px;
+    padding: 6px 10px;
+  }
+  .mine-side .combo {
+    padding: 4px;
+  }
+  .mine-side .combo-num {
+    font-size: 24px;
+  }
+  .mine-side .energy-pips {
+    margin: 6px 0 4px;
+  }
+  .mine-side .energy-pips span {
+    height: 12px;
+  }
+  .mine-side .hotbar {
+    margin: 2px 0 4px;
+  }
+  .mine-side .slot.big {
+    width: 46px;
+    height: 46px;
+  }
+  .mine-side .tile-info {
+    min-height: 0;
+  }
+  .mine-side h4 {
+    margin: 0 0 6px;
+  }
+}
+
+/* Narrow desktop frames: keep the HUD on one line. */
+@media (min-width: 761px) and (max-width: 1150px) {
+  .hud {
+    gap: 4px;
+    padding: 6px 8px;
+  }
+  .hud-logo span,
+  .hud-logo b {
+    display: none;
+  }
+  .hud-box {
+    padding: 4px 8px 4px 6px;
+  }
+  .hud-box.cash .num {
+    min-width: 64px;
+  }
+  .hud-box b,
+  .hud-box .num {
+    font-size: 12px;
+  }
+  .icon-btn {
+    padding: 6px;
+  }
+}
+
 /* ---------- responsive ---------- */
 
-@media (max-width: 960px) {
+@media (max-width: 760px) {
+  .app.phase-town,
+  .app.phase-mine {
+    height: auto;
+  }
   .mine-view {
     grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+  .mine-side {
+    max-height: none;
+    overflow: visible;
   }
   .hud {
     gap: 6px;
@@ -1780,4 +1891,56 @@ main {
 .center-row {
   justify-content: center;
   margin: 8px 0;
+}
+
+/* ---------- first-run coaching ---------- */
+.town-wrap {
+  position: relative;
+}
+.coach {
+  position: absolute;
+  left: 50%;
+  top: 14px;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: calc(100% - 24px);
+  padding: 8px 8px 8px 14px;
+  background: #fff3c4;
+  color: #2a1700;
+  font-size: 15px;
+  line-height: 1.3;
+  box-shadow: var(--frame), inset 0 -4px 0 0 #e0c27a;
+  animation: coachIn 0.3s steps(4) both, coachBob 1.2s steps(2) 0.3s infinite;
+  pointer-events: auto;
+}
+.mine-main .coach {
+  top: auto;
+  bottom: 28px;
+}
+.coach-x {
+  font: inherit;
+  font-size: 16px;
+  line-height: 1;
+  color: #7a5a20;
+  background: none;
+  border: none;
+  padding: 2px 6px;
+  cursor: pointer;
+}
+.coach-x:hover {
+  color: #2a1700;
+}
+@keyframes coachIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -8px);
+  }
+}
+@keyframes coachBob {
+  50% {
+    transform: translate(-50%, -2px);
+  }
 }

@@ -32,6 +32,8 @@ export interface TownState {
   evening: boolean;
   urgent: boolean;
   canDig: boolean;
+  /** Tutorial pointer: a bubble over a building. */
+  point?: { id: BuildingId; label: string } | null;
 }
 
 interface Puff {
@@ -139,6 +141,10 @@ export class TownScene {
     this.drawMiner(now);
     if (st.canDig) this.bubble(38, 66 + (Math.floor(now / 300) % 2), 'DIG!', '#ffd34d');
     if (st.urgent) this.bubble(287, 56 + (Math.floor(now / 200) % 2), 'PAY!', '#ff5050');
+    else if (st.point && st.point.id !== 'mine') {
+      const b = BUILDINGS.find((x) => x.id === st.point!.id)!;
+      this.bubble(b.door, b.y - 6 + (Math.floor(now / 300) % 2), st.point.label, '#7dff9b');
+    }
     if (this.hover) this.highlight(this.hover, now);
     for (const t of this.texts) {
       c.globalAlpha = t.life > 1.6 ? (2.2 - t.life) / 0.6 : 1;

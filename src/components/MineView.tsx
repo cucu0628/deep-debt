@@ -13,6 +13,7 @@ import { derive } from '../game/stats';
 import { toast, useGame, useUi } from '../store';
 import { Btn, Icon, TileIcon } from './common';
 import { RewardButton } from './RewardButton';
+import { Coach } from './Coach';
 import { AD_ENERGY, adEnergy } from '../game/rewards';
 
 function MineCanvas({ onHover, auto, stopAuto }: { onHover: (i: number) => void; auto: boolean; stopAuto: () => void }) {
@@ -34,7 +35,10 @@ function MineCanvas({ onHover, auto, stopAuto }: { onHover: (i: number) => void;
       const m = useGame.getState().game.run.mine;
       if (!el || !m) return;
       const aw = el.clientWidth;
-      const ah = window.innerHeight - 96;
+      // Fill the height of the game area (minus padding and the wooden frame); mobile stacks and scrolls.
+      const mainEl = el.closest('main');
+      const fixed = window.matchMedia('(min-width: 761px)').matches && mainEl;
+      const ah = fixed ? mainEl.clientHeight - 28 - 32 : window.innerHeight - 96;
       const k = `${aw}:${ah}:${m.w}:${window.devicePixelRatio}`;
       if (k !== key) {
         key = k;
@@ -189,6 +193,7 @@ export function MineView() {
     <div className="mine-view">
       <div className="mine-main">
         <MineCanvas onHover={setHover} auto={auto} stopAuto={() => setAuto(false)} />
+        <Coach />
         {m.energy <= 0 && (
           <div className="out-of-energy px-panel">
             <Icon e="😮‍💨" size={32} />

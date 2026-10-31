@@ -20,6 +20,8 @@ export interface Meta {
   stats: MetaStats;
   /** Loan clauses selected for the next run (absent in old saves). */
   clauses?: string[];
+  /** The player switched off the first-run tips. */
+  tipsOff?: boolean;
 }
 
 export interface HiLo {

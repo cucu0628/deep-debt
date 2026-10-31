@@ -23,6 +23,8 @@ import { fmt, money, unit } from '../format';
 import { toast, useGame, useUi } from '../store';
 import { Bar, Btn, Icon, Modal, TileIcon } from './common';
 import { SkillTree } from './SkillTree';
+import { Coach } from './Coach';
+import { currentTip } from '../game/tutorial';
 import { RewardButton } from './RewardButton';
 import { adReroll } from '../game/rewards';
 import { Saloon } from './saloon/Saloon';
@@ -40,8 +42,10 @@ function TownCanvas({ onPick }: { onPick: (id: BuildingId) => void }) {
     const measure = () => {
       const el = wrap.current;
       if (!el) return;
-      const aw = el.clientWidth;
-      const ah = window.innerHeight - 190;
+      // On wide screens the wrap is sized by the layout (it fills the frame); stacked mobile layout scrolls.
+      const fixed = window.matchMedia('(min-width: 761px)').matches;
+      const aw = el.clientWidth - 32;
+      const ah = fixed ? el.clientHeight - 32 : window.innerHeight - 190;
       const k = `${aw}:${ah}:${window.devicePixelRatio}`;
       if (k !== key) {
         key = k;
@@ -56,11 +60,14 @@ function TownCanvas({ onPick }: { onPick: (id: BuildingId) => void }) {
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
       measure();
-      const run = useGame.getState().game.run;
+      const game = useGame.getState().game;
+      const run = game.run;
+      const tip = currentTip(game);
       sc.frame(now, dt, {
         evening: run.minedToday,
         urgent: run.debtDue - run.day <= 1 && debtRemaining(run) > 0,
         canDig: !run.minedToday,
+        point: tip?.building ? { id: tip.building, label: tip.label ?? '' } : null,
       });
       raf = requestAnimationFrame(loop);
     };
@@ -86,6 +93,7 @@ function TownCanvas({ onPick }: { onPick: (id: BuildingId) => void }) {
 
   return (
     <div className="town-wrap" ref={wrap}>
+      <Coach />
       <div className="scene-frame">
         <canvas
           ref={canvas}
