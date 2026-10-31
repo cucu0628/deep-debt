@@ -1,0 +1,7 @@
+node_modules
+dist
+dist-ssr
+*.local
+*.log
+# local backups made before big changes
+src.bak-*
