@@ -5,3 +5,6 @@ dist-ssr
 *.log
 # local backups made before big changes
 src.bak-*
+
+# generated promo art and videos (regenerate with tools/promo)
+promo/
