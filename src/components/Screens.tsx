@@ -398,6 +398,11 @@ function Settings() {
         <span>🪪 This run's shards so far: {calcShards(game.run)}</span>
         {!!game.run.clauses?.length && <span>✍ Loan clauses: ×{(1 + clauseBonus(game.run.clauses)).toFixed(2)} shards</span>}
       </div>
+      {import.meta.env.VITE_ADS === 'adsense' && (
+        <p className="small dim">
+          Optional ads are provided by Google. <a href="https://asked.hu/adatvedelem.html#english" target="_blank" rel="noreferrer">Privacy policy</a>
+        </p>
+      )}
       <h4>Sound</h4>
       <Btn onClick={() => setMuted(!muted)}>{muted ? '🔇 Muted' : '🔊 Sound on'}</Btn>
       <h4>Save</h4>
